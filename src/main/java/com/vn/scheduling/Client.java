@@ -1,4 +1,4 @@
-package client;
+package com.vn.scheduling;
 
 // COMP335 Assignment 1: Stage 1
 // 44849516 Cameron Mills and Victor Nikolic

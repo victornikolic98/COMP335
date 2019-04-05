@@ -1,4 +1,4 @@
-package client;
+package com.vn.scheduling;
 
 import java.util.ArrayList;
 import java.util.List;

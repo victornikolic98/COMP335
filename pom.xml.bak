@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.vn</groupId>
-    <artifactId>scheduling</artifactId>
+    <artifactId>scheduling-client</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
@@ -18,12 +20,12 @@
         <maven-site-plugin.version>3.7.1</maven-site-plugin.version>
         <maven-surefire-plugin.version>2.21.0</maven-surefire-plugin.version>
         <maven-war-plugin.version>3.2.2</maven-war-plugin.version>
-        <!--        <mockito.core.version>2.18.3</mockito.core.version>-->
-        <!--        <nexus-staging-maven-plugin.version>1.6.8</nexus-staging-maven-plugin.version>-->
+<!--        <mockito.core.version>2.18.3</mockito.core.version>-->
+<!--        <nexus-staging-maven-plugin.version>1.6.8</nexus-staging-maven-plugin.version>-->
         <sortpom-maven-plugin.version>2.8.0</sortpom-maven-plugin.version>
-        <!--        <spring-vault-core.version>2.0.1.RELEASE</spring-vault-core.version>-->
-        <!--        <surefire-junit47.version>2.19.1</surefire-junit47.version>-->
-        <!--        <vault-java-driver.version>3.1.0</vault-java-driver.version>-->
+<!--        <spring-vault-core.version>2.0.1.RELEASE</spring-vault-core.version>-->
+<!--        <surefire-junit47.version>2.19.1</surefire-junit47.version>-->
+<!--        <vault-java-driver.version>3.1.0</vault-java-driver.version>-->
     </properties>
 
     <build>
@@ -43,6 +45,24 @@
             </testResource>
         </testResources>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <!-- latest version (2.20.1) does not work well with JUnit5 -->
+                <version>2.19.1</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.junit.platform</groupId>
+                        <artifactId>junit-platform-surefire-provider</artifactId>
+                        <version>1.0.3</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.junit.jupiter</groupId>
+                        <artifactId>junit-jupiter-engine</artifactId>
+                        <version>5.0.3</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
             <plugin>
                 <groupId>com.github.ekryd.sortpom</groupId>
                 <artifactId>sortpom-maven-plugin</artifactId>
@@ -97,7 +117,7 @@
                             <Group-Id>${project.groupId}</Group-Id>
                             <Resolver-Version>${project.version}</Resolver-Version>
                             <Resolver-Build-Time>${maven.build.timestamp}</Resolver-Build-Time>
-                            <Main-Class>com.vn.scheduling.Client</Main-Class>
+                            <Main-Class>com.snc.discovery.CredentialResolver</Main-Class>
                         </manifestEntries>
                     </archive>
                 </configuration>
@@ -148,25 +168,8 @@
                 <artifactId>maven-site-plugin</artifactId>
                 <version>${maven-site-plugin.version}</version>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <!-- latest version (2.20.1) does not work well with JUnit5 -->
-                <version>2.19.1</version>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.junit.jupiter</groupId>
-                        <artifactId>junit-jupiter-engine</artifactId>
-                        <version>5.0.3</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.junit.platform</groupId>
-                        <artifactId>junit-platform-surefire-provider</artifactId>
-                        <version>1.0.3</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
         </plugins>
     </build>
+
 
 </project>

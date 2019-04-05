@@ -1,4 +1,4 @@
-package client;
+package com.vn.scheduling;
 
 public class Server {
 
