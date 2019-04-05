@@ -153,6 +153,7 @@ public class Client {
             closeConnection(e.getMessage());
         }
 
+        // workaround for empty response from server
         while (resp.trim().isEmpty()) {
             System.out.println("RECEIVED: Empty response from server!");
             resp = readResponse();
