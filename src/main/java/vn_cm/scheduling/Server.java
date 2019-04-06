@@ -1,4 +1,4 @@
-package com.vn.scheduling;
+package vn_cm.scheduling;
 
 public class Server {
 

@@ -1,4 +1,4 @@
-package com.vn.scheduling;
+package vn_cm.scheduling;
 
 import java.util.ArrayList;
 import java.util.List;
