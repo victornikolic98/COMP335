@@ -45,10 +45,8 @@ public class Servers {
         return currentJob.getNumberOfCores() <= server.getCoreCount();
     }
 
-
     public void removeAllServers() {
         servers.clear();
-
     }
 
 }

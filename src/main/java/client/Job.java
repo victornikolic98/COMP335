@@ -18,7 +18,6 @@ public class Job {
     private int disk;
 
     public Job(String jobText) {
-
         String[] tokens = jobText.split(" ");
         this.submitTime = Integer.valueOf(tokens[1]);
         this.jobID = Integer.valueOf(tokens[2]);
@@ -26,7 +25,6 @@ public class Job {
         this.numberOfCores = Integer.valueOf(tokens[4]);
         this.memory = Integer.valueOf(tokens[5]);
         this.disk = Integer.valueOf(tokens[6]);
-
     }
 
     public int getSubmitTime() {

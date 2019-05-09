@@ -1,7 +1,7 @@
 package client;
 
-// COMP335 Assignment 1: Stage 1
-// 44849516 Cameron Mills and Victor Nikolic
+// COMP335 Assignment 1: Stage 2
+// 45158290 Victor Nikolic
 
 //Import Java libraries
 
@@ -48,32 +48,45 @@ public class Client {
     private Socket socket;
     private DataOutputStream output;
     private DataInputStream input;
+    private final boolean isVerbose;
+    private final boolean isFirstFit;
 
 
-    public static boolean isValidFirstChar(String name) {
-        if (VALID_FIRST_CHARACTERS.matcher(name).matches()) {
-            return true;
-        }
-        return false;
+    public Client(boolean isVerbose, boolean isFirstFit) {
+        this.isVerbose = isVerbose;
+        this.isFirstFit = isFirstFit;
     }
-
 
     // Entry point
     public static void main(String[] args) {
-//        for(String arg : args) {
-//            if(HELP.equals(arg)) {
+        boolean isVerbose = false;
+        boolean isFirstFit = false;
+
+        for(int i = 0; i < args.length; i++) {
+            if(HELP.equals(args[i])) {
+                System.out.println("Usage: java -jar client.jar [-h] [-v] [-a algo_name]");
+//                System.out.println("The only algorithm available is First-Fit (ff)");
+                System.exit(0);
+            } else if(VERBOSE.equals(args[i])) {
+                isVerbose = true;
+            } else if(ALGORITHM.equals(args[i])) {
+                if(!ALGORITHM_CHOICE.equals(args[i+1])) {
+                    System.out.println("Err: invalid algorithm (" + args[i+1] + ")");
+                    System.out.println("Usage: java -jar client.jar [-h] [-v] [-a algo_name]");
+                    System.out.println("The only algorithm available is First-Fit (ff)");
+                    System.exit(0);
+                }
+                isFirstFit = true;
+            }
+//            else {
+//                System.out.println("Unknown option '" + args[i] + "'");
 //                System.out.println("Usage: java -jar client.jar [-h] [-v] [-a algo_name]");
-//                System.exit(0);
-//            } else {
-//                System.out.println("Unknown option '" + arg + "'");
-//                System.out.println("Usage: java -jar client.jar [-h] [-v] [-a algo_name]");
+//                System.out.println("The only algorithm available is First-Fit (ff)");
 //                System.exit(0);
 //            }
-//        }
+        }
 
-
-
-        Client clnt = new Client();
+        Client clnt = new Client(isVerbose, isFirstFit);
         try {
             clnt.startClient();
         } catch (RuntimeException e) {
@@ -149,12 +162,17 @@ public class Client {
                     }
                 }
 
-                final Server firstServer = availableServers.findFirst(currentJob);
+                Server server;
+                if(isFirstFit) {
+                    server = availableServers.findFirst(currentJob);
+                } else {
+                    server = availableServers.findLargest();
+                }
 
-                if (DOT_RESPONSE.equals(resp) && firstServer != null) {
+                if (DOT_RESPONSE.equals(resp) && server != null) {
 //                    resp = sendCommand(((String.format(SCHD, tokens[2], largest.getType(), "0"))));
-                    resp = sendCommand(((String.format(SCHD, currentJob.getJobID(), firstServer.getType(),
-                            firstServer.getId()))));
+                    resp = sendCommand(((String.format(SCHD, currentJob.getJobID(), server.getType(),
+                            server.getId()))));
                 }
             }
 
@@ -184,7 +202,10 @@ public class Client {
 
         String resp = "";
 
-        System.out.println("SENT: " + command);
+
+        if(isVerbose) {
+            System.out.println("SENT: " + command);
+        }
 
         try {
             output.write(command.getBytes());
@@ -197,11 +218,14 @@ public class Client {
 
         // workaround for empty response from server
         while (resp.trim().isEmpty()) {
-            System.out.println("RECEIVED: Empty response from server!");
+//            if(isVerbose)
+//                System.out.println("RECEIVED: Empty response from server!");
             resp = readResponse();
         }
 
-        System.out.println("RECEIVED: " + resp);
+        if(isVerbose) {
+            System.out.println("RECEIVED: " + resp);
+        }
 
         if (ERR.equals(resp)) {
             closeConnection("Server returned ERR!");
