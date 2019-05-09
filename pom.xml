@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>vn_cm</groupId>
+    <groupId>client</groupId>
     <artifactId>scheduling</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
@@ -97,7 +97,7 @@
                             <Group-Id>${project.groupId}</Group-Id>
                             <Resolver-Version>${project.version}</Resolver-Version>
                             <Resolver-Build-Time>${maven.build.timestamp}</Resolver-Build-Time>
-                            <Main-Class>vn_cm.scheduling.Client</Main-Class>
+                            <Main-Class>Client</Main-Class>
                         </manifestEntries>
                     </archive>
                 </configuration>

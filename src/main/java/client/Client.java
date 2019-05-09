@@ -1,13 +1,15 @@
-package vn_cm.scheduling;
+package client;
 
 // COMP335 Assignment 1: Stage 1
 // 44849516 Cameron Mills and Victor Nikolic
 
 //Import Java libraries
+
 import java.io.*;
 import java.net.*;
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 
 public class Client {
 
@@ -35,13 +37,41 @@ public class Client {
     private static final String ERR = "ERR";
     private static final String DOT_RESPONSE = ".";
 
+    private static final String HELP = "-h";
+    private static final String ALGORITHM = "-a";
+    private static final String VERBOSE = "-v";
+    private static final String ALGORITHM_CHOICE = "ff";
+    public static final Pattern VALID_FIRST_CHARACTERS = Pattern.compile("^[\\\\ \\' \\-].*");
+
+
     // Initialize the socket and the input and output
     private Socket socket;
     private DataOutputStream output;
     private DataInputStream input;
 
+
+    public static boolean isValidFirstChar(String name) {
+        if (VALID_FIRST_CHARACTERS.matcher(name).matches()) {
+            return true;
+        }
+        return false;
+    }
+
+
     // Entry point
     public static void main(String[] args) {
+//        for(String arg : args) {
+//            if(HELP.equals(arg)) {
+//                System.out.println("Usage: java -jar client.jar [-h] [-v] [-a algo_name]");
+//                System.exit(0);
+//            } else {
+//                System.out.println("Unknown option '" + arg + "'");
+//                System.out.println("Usage: java -jar client.jar [-h] [-v] [-a algo_name]");
+//                System.exit(0);
+//            }
+//        }
+
+
 
         Client clnt = new Client();
         try {
@@ -92,14 +122,19 @@ public class Client {
         // Read in jobs and find the job ID
         // Repeat the above in a loop until all jobs have been allocated
 
+        Job currentJob;
+        Servers availableServers = new Servers();
+
         while (!QUIT.equals(resp)) {
 
             resp = sendCommand(READY);
 
             if (NONE.equals(resp)) {
                 resp = sendCommand(QUIT);
+
             } else {
-            // Response is JOBN
+                // Response is JOBN
+                currentJob = new Job(resp);
                 String[] tokens = resp.split(" ");
                 String cmdRscd = String.format(RESC, tokens[4], tokens[5], tokens[6]);
 
@@ -108,11 +143,18 @@ public class Client {
                 if (DATA.equals(resp)) {
                     while (!DOT_RESPONSE.equals(resp)) {
                         resp = sendCommand(OK);
+                        if(!DOT_RESPONSE.equals(resp)) {
+                            availableServers.add(Server.createFromResponse(resp));
+                        }
                     }
                 }
 
-                if (DOT_RESPONSE.equals(resp)) {
-                    resp = sendCommand(((String.format(SCHD, tokens[2], largest.getType(), "0"))));
+                final Server firstServer = availableServers.findFirst(currentJob);
+
+                if (DOT_RESPONSE.equals(resp) && firstServer != null) {
+//                    resp = sendCommand(((String.format(SCHD, tokens[2], largest.getType(), "0"))));
+                    resp = sendCommand(((String.format(SCHD, currentJob.getJobID(), firstServer.getType(),
+                            firstServer.getId()))));
                 }
             }
 

@@ -1,4 +1,4 @@
-package vn_cm.scheduling;
+package client;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

@@ -1,6 +1,12 @@
-package vn_cm.scheduling;
+package client;
 
 public class Server {
+
+    public static final int INACTIVE = 0;
+    public static final int BOOTING = 1;
+    public static final int IDLE = 2;
+    public static final int ACTIVE = 3;
+    public static final int UNAVAILABLE = 4;
 
     // Initialising server attributes
     private String type;
@@ -10,14 +16,31 @@ public class Server {
     private int coreCount;
     private int memorySize;
     private int diskSize;
-
-    private String serverId;
+    private int id;
     private int serverState;
     private int availableTime;
+
+
+    private String serverId;
 
     public Server() {
     }
 
+    public static Server createFromResponse(String response) {
+
+        Server result = new Server();
+        String[] tokens = response.split(" ");
+        result.setType(tokens[0]);
+        result.setId(Integer.valueOf(tokens[1]));
+        result.setServerState(Integer.valueOf(tokens[2]));
+        result.setAvailableTime(Integer.valueOf(tokens[3]));
+        result.setCoreCount(Integer.valueOf(tokens[4]));
+        result.setMemorySize(Integer.valueOf(tokens[5]));
+        result.setDiskSize(Integer.valueOf(tokens[6]));
+
+        return result;
+
+    }
     public Server(String resource) {
 
         String[] tokens = resource.split(" ");
@@ -86,4 +109,35 @@ public class Server {
         this.diskSize = diskSize;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getServerState() {
+        return serverState;
+    }
+
+    public void setServerState(int serverState) {
+        this.serverState = serverState;
+    }
+
+    public int getAvailableTime() {
+        return availableTime;
+    }
+
+    public void setAvailableTime(int availableTime) {
+        this.availableTime = availableTime;
+    }
+
+    public String getServerId() {
+        return serverId;
+    }
+
+    public void setServerId(String serverId) {
+        this.serverId = serverId;
+    }
 }
