@@ -20,4 +20,4 @@ scheduling-1.0-SNAPSHOT.jar file built in the target directory.
 1) Create ds-client folder
 1) Copy conf and client folders into it
 1) Go (cd) into the conf folder
-1) execute ./makejar.sh - Will create a client.jar in the ds-client folder.
+1) Execute ./makejar.sh - Will create a client.jar in the ds-client folder.
