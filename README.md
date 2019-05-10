@@ -1,4 +1,4 @@
-<h1>// COMP335 Assignment 1: Stage 1 // 44849516 Cameron Mills and Victor Nikolic 45158290</h1>
+<h1>// COMP335 Assignment 1: Stage 1 // Victor Nikolic 45158290</h1>
 
 <h3>Main class: Client.java</h3> containing scheduling client functionality
 
