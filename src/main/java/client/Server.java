@@ -20,10 +20,25 @@ public class Server {
     private int serverState;
     private int availableTime;
 
-
     private String serverId;
 
     public Server() {
+    }
+
+    public boolean isActive() {
+        return ACTIVE == serverState;
+    }
+
+    public boolean isIdle() {
+        return IDLE == serverState;
+    }
+
+    public boolean isAvailableTimeSufficient(Job job) {
+        return getAvailableTime() >= job.getSubmitTime();
+    }
+
+    public boolean isAvailable() {
+        return isActive() || BOOTING == serverState || INACTIVE == serverState;
     }
 
     public static Server createFromResponse(String response) {
@@ -39,18 +54,19 @@ public class Server {
         result.setDiskSize(Integer.valueOf(tokens[6]));
 
         return result;
-
     }
-    public Server(String resource) {
 
+    public Server(String resource) {
         String[] tokens = resource.split(" ");
         this.type = tokens[0];
         this.serverId = tokens[1];
         this.serverState = Integer.valueOf(tokens[2]);
         this.availableTime = Integer.valueOf(tokens[3]);
         this.coreCount = Integer.valueOf(tokens[4]);
-        this.memorySize = Integer.valueOf(tokens[5]);;
-        this.diskSize = Integer.valueOf(tokens[6]);;
+        this.memorySize = Integer.valueOf(tokens[5]);
+        ;
+        this.diskSize = Integer.valueOf(tokens[6]);
+        ;
     }
 
     public String getType() {

@@ -2,6 +2,7 @@ package client;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Servers {
 
@@ -47,6 +48,28 @@ public class Servers {
 
     public void removeAllServers() {
         servers.clear();
+    }
+
+    public Server findSuitableFirst(Job currentJob) {
+
+        Server smallestIdle = null;
+
+        List <Server> suitableServers = servers.stream()
+                .filter((server) -> hasEnoughCores(currentJob, server)
+                        && hasEnoughStorage(currentJob, server)
+                        && hasEnoughMemory(currentJob, server)
+                        && (server.isIdle() || server.isAvailable())
+                        && hasEnoughAvailableTime(currentJob, server)
+                )
+//                .sorted()
+                .collect(Collectors.toList());
+
+        return suitableServers.get(0);
+
+    }
+
+    private boolean hasEnoughAvailableTime(Job currentJob, Server server) {
+        return server.isAvailableTimeSufficient(currentJob);
     }
 
 }

@@ -9,7 +9,7 @@ public class LeastTurnaroundTimeSchedulerImpl extends Scheduler {
     @Override
     protected Server getServer(Job currentJob, Servers availableServers) {
         Server server;
-        server = availableServers.findFirst(currentJob);
+        server = availableServers.findSuitableFirst(currentJob);
         return server;
     }
 }
