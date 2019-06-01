@@ -10,7 +10,6 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.Arrays;
-import java.util.concurrent.TimeUnit;
 
 public abstract class Scheduler {
 
@@ -108,7 +107,7 @@ public abstract class Scheduler {
                 if (DATA.equals(resp)) {
                     while (!DOT_RESPONSE.equals(resp)) {
                         resp = sendCommand(OK);
-                        if(!DOT_RESPONSE.equals(resp)) {
+                        if (!DOT_RESPONSE.equals(resp)) {
                             availableServers.add(Server.createFromResponse(resp));
                         }
                     }
@@ -121,6 +120,7 @@ public abstract class Scheduler {
 //                    resp = sendCommand(((String.format(SCHD, tokens[2], largest.getType(), "0"))));
                     resp = sendCommand(((String.format(SCHD, currentJob.getJobID(), server.getType(),
                             server.getId()))));
+                    availableServers.removeAllServers();
                 }
             }
 
@@ -151,15 +151,15 @@ public abstract class Scheduler {
         String resp = "";
 
 
-        if(isVerbose) {
+        if (isVerbose) {
             System.out.println("SENT: " + command);
         }
 
         try {
             output.write(command.getBytes());
-            TimeUnit.MILLISECONDS.sleep(SERVER_WAIT_MILLIS);
+//            TimeUnit.MILLISECONDS.sleep(SERVER_WAIT_MILLIS);
             resp = readResponse();
-        } catch (InterruptedException | IOException e) {
+        } catch (/*InterruptedException | */IOException e) {
             e.printStackTrace();
             closeConnection(e.getMessage());
         }
@@ -171,7 +171,7 @@ public abstract class Scheduler {
             resp = readResponse();
         }
 
-        if(isVerbose) {
+        if (isVerbose) {
             System.out.println("RECEIVED: " + resp);
         }
 

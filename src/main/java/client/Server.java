@@ -2,10 +2,10 @@ package client;
 
 public class Server {
 
-    public static final int INACTIVE = 0;
-    public static final int BOOTING = 1;
-    public static final int IDLE = 2;
-    public static final int ACTIVE = 3;
+    private static final int INACTIVE = 0;
+    private static final int BOOTING = 1;
+    private static final int IDLE = 2;
+    private static final int ACTIVE = 3;
     public static final int UNAVAILABLE = 4;
 
     // Initialising server attributes
@@ -25,20 +25,18 @@ public class Server {
     public Server() {
     }
 
-    public boolean isActive() {
-        return ACTIVE == serverState;
-    }
-
     public boolean isIdle() {
         return IDLE == serverState;
     }
 
     public boolean isAvailableTimeSufficient(Job job) {
-        return getAvailableTime() >= job.getSubmitTime();
-    }
-
-    public boolean isAvailable() {
-        return isActive() || BOOTING == serverState || INACTIVE == serverState;
+        boolean hasTime;
+        if (isIdle()) {
+            hasTime = availableTime >= job.getEstimatedRunTime();
+        } else {
+            hasTime =  availableTime >= job.getEstimatedRunTime() && bootupTime + job.getEstimatedRunTime() <= job.getSubmitTime();
+        }
+        return hasTime;
     }
 
     public static Server createFromResponse(String response) {
@@ -64,9 +62,19 @@ public class Server {
         this.availableTime = Integer.valueOf(tokens[3]);
         this.coreCount = Integer.valueOf(tokens[4]);
         this.memorySize = Integer.valueOf(tokens[5]);
-        ;
         this.diskSize = Integer.valueOf(tokens[6]);
-        ;
+    }
+
+    public boolean hasEnoughStorage(int jobStorage) {
+        return diskSize >= jobStorage;
+    }
+
+    public boolean hasEnoughMemory(int jobMemory) {
+        return memorySize >= jobMemory;
+    }
+
+    public boolean hasEnoughCores(int jobCoreCount) {
+        return coreCount >= jobCoreCount;
     }
 
     public String getType() {

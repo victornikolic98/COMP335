@@ -9,7 +9,7 @@ public class FirstFitSchedulerImpl extends Scheduler {
     @Override
     protected Server getServer(Job currentJob, Servers availableServers) {
         Server server;
-        server = availableServers.findFirst(currentJob);
+        server = availableServers.findFirstFit(currentJob);
         return server;
     }
 }
