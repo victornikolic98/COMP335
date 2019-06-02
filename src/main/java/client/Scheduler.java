@@ -77,9 +77,9 @@ public abstract class Scheduler {
         }
 
         // Read system.xml and find largest server
-//        SystemXMLParser systemXMLParser = new SystemXMLParser();
-//        Servers servers = systemXMLParser.loadServerList("system.xml");
-//        Server largest = servers.findLargest();
+        SystemXMLParser systemXMLParser = new SystemXMLParser();
+        Servers servers = systemXMLParser.loadServerList("system.xml");
+        Server largest = servers.findLargest();
 
         // Part 3 - READY for job
         // Find the largest server and allocate all jobs to it
@@ -88,6 +88,7 @@ public abstract class Scheduler {
 
         Job currentJob;
         Servers availableServers = new Servers();
+        Server server;
 
         while (!QUIT.equals(resp)) {
 
@@ -113,10 +114,9 @@ public abstract class Scheduler {
                     }
                 }
 
-                Server server;
-                server = getServer(currentJob, availableServers);
 
-                if (DOT_RESPONSE.equals(resp) && server != null) {
+                if (DOT_RESPONSE.equals(resp)) {
+                    server = getServer(currentJob, availableServers);
 //                    resp = sendCommand(((String.format(SCHD, tokens[2], largest.getType(), "0"))));
                     resp = sendCommand(((String.format(SCHD, currentJob.getJobID(), server.getType(),
                             server.getId()))));
